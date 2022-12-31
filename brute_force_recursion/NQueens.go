@@ -34,7 +34,7 @@ func isValid(record []int, i, j int) bool {
 	// 0..i-1
 	for k := 0; k < i; k++ {
 		// 判斷是否同行 || 同斜線
-		if j == record[k] || math.Abs(float64(record[k]-j)) == math.Abs(float64(k-i)) {
+		if record[k] == j || math.Abs(float64(record[k]-j)) == math.Abs(float64(k-i)) {
 			return false
 		}
 	}
@@ -46,7 +46,7 @@ func NQueens2(n int) int {
 	if n < 1 || n > 32 {
 		return 0
 	}
-	// 如果是 7 皇后問題，limit 最右 7 個 1，其他都是 0
+	// 如果是 7 皇后問題，limit 最右(位) 7 個 1，其他都是 0
 	var limit int
 	if n == 32 {
 		limit = -1

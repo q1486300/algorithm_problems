@@ -1,7 +1,5 @@
 package binary_tree
 
-import "math"
-
 func IsBST1(head *Node) bool {
 	if head == nil {
 		return true
@@ -39,36 +37,25 @@ func processIsBST(head *Node) *IsBSTInfo {
 	leftInfo := processIsBST(head.left)
 	rightInfo := processIsBST(head.right)
 
+	min := head.value
 	max := head.value
 	if leftInfo != nil {
-		max = int(math.Max(float64(max), float64(leftInfo.max)))
+		min = getMin(min, leftInfo.min)
+		max = getMax(max, leftInfo.max)
 	}
 	if rightInfo != nil {
-		max = int(math.Max(float64(max), float64(rightInfo.max)))
-	}
-
-	min := head.value
-	if leftInfo != nil {
-		min = int(math.Min(float64(min), float64(leftInfo.min)))
-	}
-	if rightInfo != nil {
-		min = int(math.Min(float64(min), float64(rightInfo.min)))
+		min = getMin(min, rightInfo.min)
+		max = getMax(max, rightInfo.max)
 	}
 
 	isBST := true
-	if leftInfo != nil && !leftInfo.isBST {
+	if leftInfo != nil && (!leftInfo.isBST || leftInfo.max >= head.value) {
 		isBST = false
 	}
-	if rightInfo != nil && !rightInfo.isBST {
+	if rightInfo != nil && (!rightInfo.isBST || rightInfo.min <= head.value) {
 		isBST = false
 	}
-	if leftInfo != nil && leftInfo.max >= head.value {
-		isBST = false
-	}
-	if rightInfo != nil && rightInfo.min <= head.value {
-		isBST = false
-	}
-	return NewIsBSTINFO(isBST, max, min)
+	return NewIsBSTInfo(isBST, max, min)
 }
 
 type IsBSTInfo struct {
@@ -76,10 +63,18 @@ type IsBSTInfo struct {
 	max, min int
 }
 
-func NewIsBSTINFO(i bool, max, min int) *IsBSTInfo {
+func NewIsBSTInfo(i bool, max, min int) *IsBSTInfo {
 	return &IsBSTInfo{
 		isBST: i,
 		max:   max,
 		min:   min,
+	}
+}
+
+func getMin(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
 	}
 }

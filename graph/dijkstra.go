@@ -9,7 +9,7 @@ func Dijkstra1(from *Node) map[*Node]int {
 	distanceMap := make(map[*Node]int)
 	distanceMap[from] = 0
 	// 已經選過(處理過)的節點
-	selectedNodes := make(map[*Node]bool)
+	selectedNodes := make(map[*Node]struct{})
 	minNode := getMinDistanceAndUnselectedNode(distanceMap, selectedNodes)
 	for minNode != nil {
 		// 原始點 -> minNode(跳轉點) 最小距離 distance
@@ -20,16 +20,16 @@ func Dijkstra1(from *Node) map[*Node]int {
 			if !ok {
 				distanceMap[toNode] = distance + edge.weight
 			} else {
-				distanceMap[toNode] = int(math.Min(float64(preMin), float64(distance+edge.weight)))
+				distanceMap[toNode] = getMin(preMin, distance+edge.weight)
 			}
 		}
-		selectedNodes[minNode] = true
+		selectedNodes[minNode] = struct{}{}
 		minNode = getMinDistanceAndUnselectedNode(distanceMap, selectedNodes)
 	}
 	return distanceMap
 }
 
-func getMinDistanceAndUnselectedNode(distanceMap map[*Node]int, touchedNodes map[*Node]bool) *Node {
+func getMinDistanceAndUnselectedNode(distanceMap map[*Node]int, touchedNodes map[*Node]struct{}) *Node {
 	var minNode *Node
 	minDistance := math.MaxInt
 	for node, distance := range distanceMap {
@@ -43,86 +43,92 @@ func getMinDistanceAndUnselectedNode(distanceMap map[*Node]int, touchedNodes map
 }
 
 func Dijkstra2(head *Node) map[*Node]int {
-	nodeHeap := NewNodeHeap()
-	heap.Push(nodeHeap, NewNodeRecord(head, 0))
+	nodeDistanceHeap := NewNodeDistanceHeap()
+	heap.Push(nodeDistanceHeap, NewNodeDistance(head, 0))
+
 	result := make(map[*Node]int)
-	for nodeHeap.Len() != 0 {
-		record := heap.Pop(nodeHeap).(NodeRecord)
-		cur := record.node
-		distance := record.distance
+	for nodeDistanceHeap.Len() != 0 {
+		nodeDistance := heap.Pop(nodeDistanceHeap).(NodeDistance)
+		cur := nodeDistance.node
+		distance := nodeDistance.distance
 		for _, edge := range cur.edges {
-			heap.Push(nodeHeap, NewNodeRecord(edge.to, edge.weight+distance))
+			heap.Push(nodeDistanceHeap, NewNodeDistance(edge.to, distance+edge.weight))
 		}
 		result[cur] = distance
 	}
 	return result
 }
 
-type NodeRecord struct {
+type NodeDistance struct {
 	node     *Node
 	distance int
-	index    int
 }
 
-type NodeHeap struct {
-	nodeRecords []NodeRecord
-	indexMap    map[*Node]int
+type NodeDistanceHeap struct {
+	nodeDistances []NodeDistance
+	indexMap      map[*Node]int
 }
 
-func NewNodeRecord(node *Node, distance int) NodeRecord {
-	return NodeRecord{
+func NewNodeDistance(node *Node, distance int) NodeDistance {
+	return NodeDistance{
 		node:     node,
 		distance: distance,
 	}
 }
 
-func NewNodeHeap() *NodeHeap {
-	nodeHeap := &NodeHeap{
-		nodeRecords: make([]NodeRecord, 0),
-		indexMap:    make(map[*Node]int),
+func NewNodeDistanceHeap() *NodeDistanceHeap {
+	pq := &NodeDistanceHeap{
+		nodeDistances: make([]NodeDistance, 1),
+		indexMap:      make(map[*Node]int),
 	}
-	heap.Init(nodeHeap)
-	return nodeHeap
+	heap.Init(pq)
+	return pq
 }
 
-func (n NodeHeap) Len() int {
-	return len(n.nodeRecords)
+func (n NodeDistanceHeap) Len() int {
+	return len(n.nodeDistances)
 }
 
-func (n NodeHeap) Less(i, j int) bool {
-	return n.nodeRecords[i].distance < n.nodeRecords[j].distance
+func (n NodeDistanceHeap) Less(i, j int) bool {
+	return n.nodeDistances[i].distance < n.nodeDistances[j].distance
 }
 
-func (n NodeHeap) Swap(i, j int) {
-	n.nodeRecords[i], n.nodeRecords[j] = n.nodeRecords[j], n.nodeRecords[i]
-	n.nodeRecords[i].index = j
-	n.nodeRecords[j].index = i
-	n.indexMap[n.nodeRecords[i].node] = j
-	n.indexMap[n.nodeRecords[j].node] = i
+func (n NodeDistanceHeap) Swap(i, j int) {
+	n.indexMap[n.nodeDistances[i].node] = j
+	n.indexMap[n.nodeDistances[j].node] = i
+	n.nodeDistances[i], n.nodeDistances[j] = n.nodeDistances[j], n.nodeDistances[i]
 }
 
-func (n *NodeHeap) Push(x any) {
-	nodeRecord := x.(NodeRecord)
-	index, ok := n.indexMap[nodeRecord.node]
-	if !ok {
-		nodeRecord.index = len(n.nodeRecords)
-		n.nodeRecords = append(n.nodeRecords, nodeRecord)
-		n.indexMap[nodeRecord.node] = nodeRecord.index
+func (n *NodeDistanceHeap) Push(x any) {
+	nodeDistance := x.(NodeDistance)
+	index, ok := n.indexMap[nodeDistance.node]
+	if !ok { // node 還沒進到 heap 過
+		index = len(n.nodeDistances)
+		n.nodeDistances = append(n.nodeDistances, nodeDistance)
+		n.indexMap[nodeDistance.node] = index
 		return
 	}
-	if index != -1 {
-		node := n.nodeRecords[index]
-		node.distance = int(math.Min(float64(n.nodeRecords[index].distance), float64(nodeRecord.distance)))
+	if index != -1 { // node 已經進到 heap 裡，並且還沒被選擇過
+		preNodeDistance := n.nodeDistances[index]
+		preNodeDistance.distance = getMin(preNodeDistance.distance, nodeDistance.distance)
 		heap.Fix(n, index)
 	}
 }
 
-func (n *NodeHeap) Pop() any {
-	length := len(n.nodeRecords)
-	nodeRecord := n.nodeRecords[length-1]
+func (n *NodeDistanceHeap) Pop() any {
+	length := len(n.nodeDistances)
+	nodeDistance := n.nodeDistances[length-1]
 
-	n.nodeRecords = n.nodeRecords[:length-1]
+	n.nodeDistances = n.nodeDistances[:length-1]
+	n.indexMap[nodeDistance.node] = -1
 
-	n.indexMap[nodeRecord.node] = -1
-	return nodeRecord
+	return nodeDistance
+}
+
+func getMin(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
 }

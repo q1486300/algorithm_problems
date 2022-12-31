@@ -76,7 +76,5 @@ func processPAP3(str []rune, index int, ans *[]string) {
 }
 
 func swap(str []rune, i, j int) {
-	tmp := str[i]
-	str[i] = str[j]
-	str[j] = tmp
+	str[i], str[j] = str[j], str[i]
 }

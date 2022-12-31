@@ -1,5 +1,6 @@
 package linkedlist
 
+// 1(*), 2
 // 1, 2(*), 3
 // 1, 2(*), 3, 4
 func MidOrUpMidNode(head *Node) *Node {
@@ -55,9 +56,6 @@ func MidOrUpMidPreNode(head *Node) *Node {
 func MidOrDownMidPreNode(head *Node) *Node {
 	if head == nil || head.next == nil {
 		return nil
-	}
-	if head.next.next == nil {
-		return head
 	}
 	slow := head
 	fast := head.next

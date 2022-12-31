@@ -1,7 +1,5 @@
 package binary_tree
 
-import "math"
-
 func MaxDistance1(head *Node) int {
 	return processMaxDistance(head).maxDistance
 }
@@ -25,11 +23,11 @@ func processMaxDistance(x *Node) MaxDistanceInfo {
 	leftInfo := processMaxDistance(x.left)
 	rightInfo := processMaxDistance(x.right)
 
-	height := int(math.Max(float64(leftInfo.height), float64(rightInfo.height))) + 1
 	p1 := leftInfo.maxDistance
 	p2 := rightInfo.maxDistance
 	p3 := leftInfo.height + rightInfo.height + 1
-	maxDistance := int(math.Max(math.Max(float64(p1), float64(p2)), float64(p3)))
+	maxDistance := getMax(getMax(p1, p2), p3)
+	height := getMax(leftInfo.height, rightInfo.height) + 1
 	return NewMaxDistanceInfo(maxDistance, height)
 }
 
@@ -42,7 +40,7 @@ func MaxDistance2(head *Node) int {
 	max := 0
 	for i := 0; i < len(arr); i++ {
 		for j := i; j < len(arr); j++ {
-			max = int(math.Max(float64(max), float64(distance(parentMap, arr[i], arr[j]))))
+			max = getMax(max, distance(parentMap, arr[i], arr[j]))
 		}
 	}
 	return max

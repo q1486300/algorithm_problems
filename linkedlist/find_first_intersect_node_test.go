@@ -10,7 +10,7 @@ func TestGetIntersectNode(t *testing.T) {
 
 		{1, 2, 3, 4, 5, 6, 7}, // head1 有環 (第一個入環節點 4)
 		{0, 9, 8},             // head2 有環 (與 heads[2] 相交於 2)
-		{0, 9, 8},             // head2 有環 (與 heads[2] 相交於 6)
+		{0, 9, 8},             // head2 有環 (與 heads[2] 相交於 4 or 6)
 	}
 	generateHeads(&heads, nodeValues)
 
@@ -19,9 +19,9 @@ func TestGetIntersectNode(t *testing.T) {
 	heads[3].next.next.next = heads[2].next
 	heads[4].next.next.next = heads[2].next.next.next.next.next
 
-	t.Log(GetIntersectNode(heads[0], heads[1]))
+	t.Log(GetIntersectNode(heads[0], heads[1])) // 6
 
-	t.Log(GetIntersectNode(heads[2], heads[3]))
+	t.Log(GetIntersectNode(heads[2], heads[3])) // 2
 
-	t.Log(GetIntersectNode(heads[2], heads[4]))
+	t.Log(GetIntersectNode(heads[2], heads[4])) // 4
 }

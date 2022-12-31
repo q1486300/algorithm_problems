@@ -1,7 +1,5 @@
 package binary_tree
 
-import "math"
-
 type Employee struct {
 	happy int
 	nexts []*Employee
@@ -40,13 +38,13 @@ func processMaxHappy1(cur *Employee, yes bool) int {
 			p1 += processMaxHappy1(next, true)
 			p2 += processMaxHappy1(next, false)
 		}
-		return int(math.Max(float64(p1), float64(p2)))
+		return getMax(p1, p2)
 	}
 }
 
 func MaxHappy2(head *Employee) int {
 	allInfo := processMaxHappy2(head)
-	return int(math.Max(float64(allInfo.yes), float64(allInfo.no)))
+	return getMax(allInfo.yes, allInfo.no)
 }
 
 type MaxHappyInfo struct {
@@ -69,7 +67,7 @@ func processMaxHappy2(x *Employee) MaxHappyInfo {
 	for _, next := range x.nexts {
 		nextInfo := processMaxHappy2(next)
 		yes += nextInfo.no
-		no += int(math.Max(float64(nextInfo.yes), float64(nextInfo.no)))
+		no += getMax(nextInfo.yes, nextInfo.no)
 	}
 	return NewMaxHappyInfo(yes, no)
 }

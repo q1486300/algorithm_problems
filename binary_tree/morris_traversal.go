@@ -139,6 +139,7 @@ func MorrisIsBST(head *Node) bool {
 	}
 	cur := head
 	var mostRight *Node
+	atLeastOneNode := false
 	preValue := math.MinInt // 中序前一個節點的值
 	for cur != nil {
 		mostRight = cur.left
@@ -154,9 +155,11 @@ func MorrisIsBST(head *Node) bool {
 				mostRight.right = nil
 			}
 		}
-		if cur.value < preValue { // 目前節點小於前一個節點的值，返回 false
+		// atLeastOneNode 避免中序遍歷的第一個值是 math.MinInt
+		if atLeastOneNode && cur.value <= preValue { // 目前節點 <= 前一個節點的值，返回 false
 			return false
 		}
+		atLeastOneNode = true
 		preValue = cur.value // 更新前一個節點的值為目前節點
 		cur = cur.right
 	}

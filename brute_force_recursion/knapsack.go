@@ -1,9 +1,5 @@
 package brute_force_recursion
 
-import (
-	"math"
-)
-
 // 所有貨的重量和價值，都在 w 和 v 切片裡
 // 其中沒有負數
 // bag 背包容量，不能超過這個載重
@@ -30,5 +26,5 @@ func processMaxValue(w, v []int, index, rest int) int {
 	if next != -1 {
 		p2 = v[index] + next
 	}
-	return int(math.Max(float64(p1), float64(p2)))
+	return getMax(p1, p2)
 }

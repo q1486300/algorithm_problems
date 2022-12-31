@@ -1,14 +1,12 @@
 package bfs_or_dfs
 
-import (
-	"container/list"
-)
+import "container/list"
 
 // 測試連結: https://leetcode.com/problems/number-of-islands/
 func NumIslands2(board [][]byte) int {
 	islands := 0
-	for i, ints := range board {
-		for j, value := range ints {
+	for i, row := range board {
+		for j, value := range row {
 			if value == 1 {
 				islands++
 				infect(board, i, j)
@@ -103,7 +101,7 @@ func NewUnionFind[V comparable](values []V) UnionFind[V] {
 	return uf
 }
 
-func (uf UnionFind[V]) FindFather(cur V) V {
+func (uf UnionFind[V]) findFather(cur V) V {
 	path := list.New()
 	for cur != uf.parents[cur] {
 		path.PushBack(cur)
@@ -117,19 +115,19 @@ func (uf UnionFind[V]) FindFather(cur V) V {
 }
 
 func (uf UnionFind[V]) Union(a, b V) {
-	aHead := uf.FindFather(a)
-	bHead := uf.FindFather(b)
-	if aHead != bHead {
-		aSetSize := uf.sizeMap[aHead]
-		bSetSize := uf.sizeMap[bHead]
+	aF := uf.findFather(a)
+	bF := uf.findFather(b)
+	if aF != bF {
+		aSetSize := uf.sizeMap[aF]
+		bSetSize := uf.sizeMap[bF]
 		if aSetSize >= bSetSize {
-			uf.parents[bHead] = aHead
-			uf.sizeMap[aHead] = aSetSize + bSetSize
-			delete(uf.sizeMap, bHead)
+			uf.parents[bF] = aF
+			uf.sizeMap[aF] = aSetSize + bSetSize
+			delete(uf.sizeMap, bF)
 		} else {
-			uf.parents[aHead] = bHead
-			uf.sizeMap[bHead] = aSetSize + bSetSize
-			delete(uf.sizeMap, aHead)
+			uf.parents[aF] = bF
+			uf.sizeMap[bF] = aSetSize + bSetSize
+			delete(uf.sizeMap, aF)
 		}
 	}
 }

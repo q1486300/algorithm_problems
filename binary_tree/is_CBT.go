@@ -2,7 +2,6 @@ package binary_tree
 
 import (
 	"container/list"
-	"math"
 )
 
 func IsCBT1(head *Node) bool {
@@ -40,9 +39,6 @@ func IsCBT1(head *Node) bool {
 }
 
 func IsCBT2(head *Node) bool {
-	if head == nil {
-		return true
-	}
 	return processIsCBT(head).isCBT
 }
 
@@ -53,25 +49,19 @@ func processIsCBT(head *Node) IsCBTInfo {
 	leftInfo := processIsCBT(head.left)
 	rightInfo := processIsCBT(head.right)
 
-	height := int(math.Max(float64(leftInfo.height), float64(rightInfo.height))) + 1
+	height := getMax(leftInfo.height, rightInfo.height) + 1
 
 	isFull := leftInfo.isFull && rightInfo.isFull && leftInfo.height == rightInfo.height
 
 	isCBT := false
 	if isFull {
 		isCBT = true
-	} else {
-		if leftInfo.isCBT && rightInfo.isCBT {
-			if leftInfo.isCBT && rightInfo.isFull && leftInfo.height == rightInfo.height+1 {
-				isCBT = true
-			}
-			if leftInfo.isFull && rightInfo.isFull && leftInfo.height == rightInfo.height+1 {
-				isCBT = true
-			}
-			if leftInfo.isFull && rightInfo.isCBT && leftInfo.height == rightInfo.height {
-				isCBT = true
-			}
-		}
+	} else if leftInfo.isCBT && rightInfo.isFull && leftInfo.height == rightInfo.height+1 {
+		isCBT = true
+	} else if leftInfo.isFull && rightInfo.isFull && leftInfo.height == rightInfo.height+1 {
+		isCBT = true
+	} else if leftInfo.isFull && rightInfo.isCBT && leftInfo.height == rightInfo.height {
+		isCBT = true
 	}
 	return NewIsCBTInfo(isFull, isCBT, height)
 }

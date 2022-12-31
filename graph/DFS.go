@@ -13,7 +13,7 @@ func DFS(node *Node) {
 	set := make(map[*Node]bool)
 	stack.PushBack(node)
 	set[node] = true
-	fmt.Println(node.value)
+	fmt.Println(node.value) // 進堆疊時就印出(處理)
 	for stack.Len() != 0 {
 		cur := stack.Back().Value.(*Node)
 		stack.Remove(stack.Back())
@@ -23,7 +23,7 @@ func DFS(node *Node) {
 				stack.PushBack(cur)
 				stack.PushBack(next)
 				set[next] = true
-				fmt.Println(next.value)
+				fmt.Println(next.value) // 進堆疊時就印出(處理)
 				break
 			}
 		}

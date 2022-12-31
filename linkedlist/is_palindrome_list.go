@@ -1,18 +1,20 @@
 package linkedlist
 
+import "container/list"
+
 // need n extra space
 func IsPalindrome1(head *Node) bool {
-	var stack []*Node
+	stack := list.New()
 	cur := head
 	for cur != nil {
-		stack = append(stack, cur)
+		stack.PushBack(cur)
 		cur = cur.next
 	}
 	for head != nil {
-		if head.value != stack[len(stack)-1].value {
+		if head.value != stack.Back().Value.(*Node).value {
 			return false
 		}
-		stack = stack[:len(stack)-1]
+		stack.Remove(stack.Back())
 		head = head.next
 	}
 	return true
@@ -23,22 +25,25 @@ func IsPalindrome2(head *Node) bool {
 	if head == nil || head.next == nil {
 		return true
 	}
+
 	right := head.next
 	cur := head
 	for cur.next != nil && cur.next.next != nil {
 		right = right.next
 		cur = cur.next.next
 	}
-	var stack []*Node
+
+	stack := list.New()
 	for right != nil {
-		stack = append(stack, right)
+		stack.PushBack(right)
 		right = right.next
 	}
-	for len(stack) != 0 {
-		if head.value != stack[len(stack)-1].value {
+
+	for stack.Len() != 0 {
+		if head.value != stack.Back().Value.(*Node).value {
 			return false
 		}
-		stack = stack[:len(stack)-1]
+		stack.Remove(stack.Back())
 		head = head.next
 	}
 	return true

@@ -44,9 +44,7 @@ func arrPartition(nodeArr []*Node, pivot int) {
 }
 
 func swap(nodeArr []*Node, i, j int) {
-	tmp := nodeArr[i]
-	nodeArr[i] = nodeArr[j]
-	nodeArr[j] = tmp
+	nodeArr[i], nodeArr[j] = nodeArr[j], nodeArr[i]
 }
 
 func ListPartition2(head *Node, pivot int) *Node {

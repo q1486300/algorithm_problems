@@ -21,7 +21,7 @@ func processMinCoins1(arr []int, index, rest int) int {
 		for nums := 0; nums*arr[index] <= rest; nums++ {
 			next := processMinCoins1(arr, index+1, rest-(nums*arr[index]))
 			if next != math.MaxInt {
-				ans = int(math.Min(float64(ans), float64(nums+next)))
+				ans = getMin(ans, nums+next)
 			}
 		}
 		return ans
@@ -47,7 +47,7 @@ func MinCoinsDP1(arr []int, aim int) int {
 			for nums := 0; nums*arr[index] <= rest; nums++ {
 				next := dp[index+1][rest-(nums*arr[index])]
 				if next != math.MaxInt {
-					ans = int(math.Min(float64(ans), float64(nums+next)))
+					ans = getMin(ans, nums+next)
 				}
 			}
 			dp[index][rest] = ans
@@ -73,9 +73,17 @@ func MinCoinsDP2(arr []int, aim int) int {
 		for rest := 0; rest <= aim; rest++ {
 			dp[index][rest] = dp[index+1][rest]
 			if rest-arr[index] >= 0 && dp[index][rest-arr[index]] != math.MaxInt {
-				dp[index][rest] = int(math.Min(float64(dp[index][rest]), float64(dp[index][rest-arr[index]]+1)))
+				dp[index][rest] = getMin(dp[index][rest], dp[index][rest-arr[index]]+1)
 			}
 		}
 	}
 	return dp[0][aim]
+}
+
+func getMin(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
 }

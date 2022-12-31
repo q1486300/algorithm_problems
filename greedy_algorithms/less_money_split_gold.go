@@ -21,29 +21,37 @@ func processLessMoney(arr []int, pre int) int {
 	ans := math.MaxInt
 	for i := 0; i < len(arr); i++ {
 		for j := i + 1; j < len(arr); j++ {
-			ans = int(math.Min(float64(ans), float64(processLessMoney(copyAndMergeTwo(arr, i, j), pre+arr[i]+arr[j]))))
+			ans = getMin(ans, processLessMoney(copyAndMergeTwo(arr, i, j), pre+arr[i]+arr[j]))
 		}
 	}
 	return ans
 }
 
-func copyAndMergeTwo(arr []int, i, j int) []int {
-	ans := make([]int, len(arr)-1)
+func copyAndMergeTwo(arr []int, i int, j int) []int {
+	result := make([]int, len(arr)-1)
 	index := 0
-	for arri := 0; arri < len(arr); arri++ {
-		if arri != i && arri != j {
-			ans[index] = arr[arri]
+	for k, cur := range arr {
+		if k != i && k != j {
+			result[index] = cur
 			index++
 		}
 	}
-	ans[index] = arr[i] + arr[j]
-	return ans
+	result[index] = arr[i] + arr[j]
+	return result
+}
+
+func getMin(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
 }
 
 func LessMoney2(arr []int) int {
 	pQ := NewMoneyPriorityQueue()
-	for _, i := range arr {
-		heap.Push(pQ, i)
+	for _, cur := range arr {
+		heap.Push(pQ, cur)
 	}
 	sum, cur := 0, 0
 	for pQ.Len() > 1 {

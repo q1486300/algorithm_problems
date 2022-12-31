@@ -2,6 +2,7 @@ package linkedlist
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -21,7 +22,12 @@ var nodeValues = [][]int{
 func TestIsPalindrome(t *testing.T) {
 	for _, head := range heads {
 		printLinkedList(head)
-		t.Logf("%v | %v | %v\n", IsPalindrome1(head), IsPalindrome2(head), IsPalindrome3(head))
+		if !assert.Equal(t, IsPalindrome1(head), IsPalindrome2(head)) {
+			break
+		}
+		if !assert.Equal(t, IsPalindrome2(head), IsPalindrome3(head)) {
+			break
+		}
 		printLinkedList(head)
 		fmt.Println("=============================")
 	}

@@ -1,9 +1,6 @@
 package greedy_algorithms
 
-import (
-	"math"
-	"sort"
-)
+import "sort"
 
 type Program struct {
 	start, end int
@@ -54,7 +51,7 @@ func processBestArrange(programs Programs, done, timeLine int) int {
 	for i, program := range programs {
 		if program.start >= timeLine {
 			next := copyButExcept(programs, i)
-			max = int(math.Max(float64(max), float64(processBestArrange(next, done+1, program.end))))
+			max = getMax(max, processBestArrange(next, done+1, program.end))
 		}
 	}
 	return max
@@ -70,6 +67,14 @@ func copyButExcept(programs Programs, i int) Programs {
 		}
 	}
 	return ans
+}
+
+func getMax(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
 }
 
 // 會議的開始時間和結束時間都是數值，不會 < 0

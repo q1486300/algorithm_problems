@@ -2,7 +2,6 @@ package binary_tree
 
 import (
 	"container/list"
-	"math"
 )
 
 func MaxWidthUseMap(head *Node) int {
@@ -32,13 +31,21 @@ func MaxWidthUseMap(head *Node) int {
 		if curNodeLevel == curLevel {
 			curLevelNodes++
 		} else {
-			max = int(math.Max(float64(max), float64(curLevelNodes)))
+			max = getMax(max, curLevelNodes)
 			curLevel++
 			curLevelNodes = 1
 		}
 	}
-	max = int(math.Max(float64(max), float64(curLevelNodes)))
+	max = getMax(max, curLevelNodes)
 	return max
+}
+
+func getMax(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
 }
 
 func MaxWidthNoMap(head *Node) int {
@@ -65,7 +72,7 @@ func MaxWidthNoMap(head *Node) int {
 		}
 		curLevelNodes++
 		if cur == curEnd {
-			max = int(math.Max(float64(max), float64(curLevelNodes)))
+			max = getMax(max, curLevelNodes)
 			curLevelNodes = 0
 			curEnd = nextEnd
 		}

@@ -30,7 +30,7 @@ func processPAS(str []rune, index int, ans *[]string, path string) {
 func PrintAllSubsequencesNoRepeat(s string) []string {
 	str := []rune(s)
 	path := ""
-	set := make(map[string]bool)
+	set := make(map[string]struct{})
 	processPASNR(str, 0, set, path)
 	var ans []string
 	for cur, _ := range set {
@@ -39,9 +39,9 @@ func PrintAllSubsequencesNoRepeat(s string) []string {
 	return ans
 }
 
-func processPASNR(str []rune, index int, set map[string]bool, path string) {
+func processPASNR(str []rune, index int, set map[string]struct{}, path string) {
 	if index == len(str) {
-		set[path] = true
+		set[path] = struct{}{}
 		return
 	}
 	// 沒有要 index 位置上的字元

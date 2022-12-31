@@ -44,7 +44,7 @@ func getNextArray(str2 []rune) []int {
 			cn++
 			next[i] = cn
 			i++
-		} else if cn > 0 {
+		} else if next[cn] != -1 { // cn == 0
 			cn = next[cn]
 		} else {
 			next[i] = 0

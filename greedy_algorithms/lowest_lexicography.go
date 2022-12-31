@@ -34,12 +34,12 @@ func processLowestLexicography(strs []string) []string {
 // {"abc", "cks", "bct"}
 // 0 1 2
 // removeIndexString(arr, 1) -> {"abc", "bct"}
-func removeIndexString(arr []string, index int) []string {
-	ans := make([]string, len(arr)-1)
+func removeIndexString(strs []string, index int) []string {
+	ans := make([]string, len(strs)-1)
 	ansIndex := 0
-	for i, s := range arr {
+	for i, str := range strs {
 		if i != index {
-			ans[ansIndex] = s
+			ans[ansIndex] = str
 			ansIndex++
 		}
 	}
@@ -64,9 +64,6 @@ func (m MyStrings) Swap(i, j int) {
 }
 
 func LowestString2(strs MyStrings) string {
-	if strs == nil || len(strs) == 0 {
-		return ""
-	}
 	sort.Sort(strs)
 	res := strings.Builder{}
 	for _, str := range strs {

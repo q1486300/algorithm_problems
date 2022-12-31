@@ -31,17 +31,17 @@ func (u UnionFind) MakeSets(nodes []*Node) {
 	}
 }
 
-func (u UnionFind) findFather(n *Node) *Node {
+func (u UnionFind) findFather(cur *Node) *Node {
 	path := list.New()
-	for n != u.fatherMap[n] {
-		path.PushBack(n)
-		n = u.fatherMap[n]
+	for cur != u.fatherMap[cur] {
+		path.PushBack(cur)
+		cur = u.fatherMap[cur]
 	}
 	for path.Len() != 0 {
-		u.fatherMap[path.Back().Value.(*Node)] = n
+		u.fatherMap[path.Back().Value.(*Node)] = cur
 		path.Remove(path.Back())
 	}
-	return n
+	return cur
 }
 
 func (u UnionFind) IsSameSet(a, b *Node) bool {
@@ -69,19 +69,23 @@ func (u UnionFind) Union(a, b *Node) {
 	}
 }
 
-func KruskalMST(graph Graph) map[*Edge]bool {
-	unionFind := UnionFind{}
+func (u UnionFind) Sets() int {
+	return len(u.sizeMap)
+}
+
+func KruskalMST(graph Graph) map[*Edge]struct{} {
+	unionFind := NewUnionFind()
 	unionFind.MakeSets(graph.GetAllNodes())
 	// 從小的邊到大的邊，一次彈出，最小堆積樹
 	priorityQueue := NewEdgePriorityQueue()
-	for edge, _ := range graph.edges { // M 條邊
+	for edge := range graph.edges { // M 條邊
 		heap.Push(priorityQueue, edge) // O(logM)
 	}
-	result := make(map[*Edge]bool)
-	for len(*priorityQueue) != 0 { // M 條邊
+	result := make(map[*Edge]struct{})
+	for priorityQueue.Len() != 0 { // M 條邊
 		edge := heap.Pop(priorityQueue).(*Edge)
 		if !unionFind.IsSameSet(edge.from, edge.to) { // O(1)
-			result[edge] = true
+			result[edge] = struct{}{}
 			unionFind.Union(edge.from, edge.to)
 		}
 	}

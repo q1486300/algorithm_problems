@@ -1,7 +1,5 @@
 package dynamic_programming
 
-import "math"
-
 // 此題的暴力遞迴版本在: brute_force_recursion/cards_in_line.go
 func Win1(arr []int) int {
 	if arr == nil || len(arr) == 0 {
@@ -20,7 +18,7 @@ func Win1(arr []int) int {
 	}
 	first := f1(arr, 0, N-1, fmap, gmap)
 	second := g1(arr, 0, N-1, fmap, gmap)
-	return int(math.Max(float64(first), float64(second)))
+	return getMax(first, second)
 }
 
 // arr[L..R]，返回先手獲得的最好分數
@@ -34,7 +32,7 @@ func f1(arr []int, L, R int, fmap, gmap [][]int) int {
 	} else {
 		p1 := arr[L] + g1(arr, L+1, R, fmap, gmap)
 		p2 := arr[R] + g1(arr, L, R-1, fmap, gmap)
-		ans = int(math.Max(float64(p1), float64(p2)))
+		ans = getMax(p1, p2)
 	}
 	fmap[L][R] = ans
 	return ans
@@ -49,7 +47,7 @@ func g1(arr []int, L, R int, fmap, gmap [][]int) int {
 	if L != R {
 		p1 := f1(arr, L+1, R, fmap, gmap)
 		p2 := f1(arr, L, R-1, fmap, gmap)
-		ans = int(math.Min(float64(p1), float64(p2)))
+		ans = getMin(p1, p2)
 	}
 	gmap[L][R] = ans
 	return ans
@@ -73,11 +71,19 @@ func Win2(arr []int) int {
 		L := 0
 		R := startCol
 		for R < N {
-			fmap[L][R] = int(math.Max(float64(arr[L]+gmap[L+1][R]), float64(arr[R]+gmap[L][R-1])))
-			gmap[L][R] = int(math.Min(float64(fmap[L+1][R]), float64(fmap[L][R-1])))
+			fmap[L][R] = getMax(arr[L]+gmap[L+1][R], arr[R]+gmap[L][R-1])
+			gmap[L][R] = getMin(fmap[L+1][R], fmap[L][R-1])
 			L++
 			R++
 		}
 	}
-	return int(math.Max(float64(fmap[0][N-1]), float64(gmap[0][N-1])))
+	return getMax(fmap[0][N-1], gmap[0][N-1])
+}
+
+func getMax(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
 }

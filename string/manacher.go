@@ -12,7 +12,7 @@ func Manacher(s string) int {
 	pArr := make([]int, len(str))
 	// C 表示 R 更新過後的對稱點(回文中點)位置
 	C := -1
-	// R 表示最右的擴成功位置的再下一個位置
+	// R 表示最右的擴成功位置(最大回文半徑)的再下一個位置
 	R := -1
 	max := math.MinInt
 	for i := 0; i < len(str); i++ {
@@ -20,7 +20,7 @@ func Manacher(s string) int {
 		// i 位置擴出來的答案，i 位置擴的區域，至少是多大
 		if R > i {
 			// i 在 C 的對稱點位置: C - (i - C)
-			pArr[i] = int(math.Min(float64(pArr[2*C-i]), float64(R-i)))
+			pArr[i] = getMin(pArr[2*C-i], R-i)
 		} else {
 			pArr[i] = 1
 		}
@@ -35,7 +35,7 @@ func Manacher(s string) int {
 			R = i + pArr[i]
 			C = i
 		}
-		max = int(math.Max(float64(max), float64(pArr[i])))
+		max = getMax(max, pArr[i])
 	}
 	return max - 1
 }
@@ -53,4 +53,20 @@ func manacherString(str string) []rune {
 		}
 	}
 	return res
+}
+
+func getMin(a, b int) int {
+	if a < b {
+		return a
+	} else {
+		return b
+	}
+}
+
+func getMax(a, b int) int {
+	if a > b {
+		return a
+	} else {
+		return b
+	}
 }

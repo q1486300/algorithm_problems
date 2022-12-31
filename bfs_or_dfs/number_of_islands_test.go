@@ -15,16 +15,16 @@ func TestNumIslands(t *testing.T) {
 	board2 := copyMatrix(board1)
 
 	// 感染方法，並查集(map 實現)
-	start := time.Now().UnixMilli()
+	start := time.Now()
 	n1 := NumIslands1(board1)
-	end := time.Now().UnixMilli()
-	fmt.Printf("感染方法，並查集(map 實現)的執行時間: %d ms\n", end-start)
+	duration := time.Since(start)
+	fmt.Printf("感染方法，並查集(map 實現)的執行時間: %v\n", duration)
 
 	// 感染方法，普通 BFS
-	start = time.Now().UnixMilli()
+	start = time.Now()
 	n2 := NumIslands2(board2)
-	end = time.Now().UnixMilli()
-	fmt.Printf("感染方法，普通 BFS 的執行時間: %d ms\n", end-start)
+	duration = time.Since(start)
+	fmt.Printf("感染方法，普通 BFS 的執行時間: %v\n", duration)
 
 	fmt.Println(n1, n2)
 	assert.Equal(t, n1, n2)

@@ -46,10 +46,10 @@ func (e *EdgePriorityQueue) Push(x any) {
 }
 
 func (e *EdgePriorityQueue) Pop() any {
-	old := *e
-	tmp := old[len(*e)-1]
-	*e = old[:len(*e)-1]
+	tmp := (*e)[len(*e)-1]
+	*e = (*e)[:len(*e)-1]
 	return tmp
+
 }
 
 func NewGraph() Graph {

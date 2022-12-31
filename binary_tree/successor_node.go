@@ -17,9 +17,6 @@ func GetSuccessorNode(node *NodeWithParent) *NodeWithParent {
 }
 
 func getLeftMost(node *NodeWithParent) *NodeWithParent {
-	if node == nil {
-		return node
-	}
 	for node.left != nil {
 		node = node.left
 	}

@@ -9,8 +9,8 @@ type BitMap []byte
 
 const byteSize = 8
 
-func NewBitMap(n uint) BitMap {
-	return make([]byte, (n/byteSize)+1)
+func NewBitMap(maxNum uint) BitMap {
+	return make([]byte, (maxNum/byteSize)+1)
 }
 
 func (b BitMap) Set(n uint) {
@@ -19,7 +19,7 @@ func (b BitMap) Set(n uint) {
 		return
 	}
 	byteIndex := n / byteSize   // 第 x 個 Byte (0, 1, 2...)
-	offsetIndex := n % byteSize // 偏移量 (0 < 偏移量 < byteSize)
+	offsetIndex := n % byteSize // 偏移量 (0 <= 偏移量 < byteSize)
 	// 第 x 個 Byte 偏移量為 offsetIndex 的位，或(|)上 1
 	b[byteIndex] |= 1 << offsetIndex
 }
@@ -52,9 +52,9 @@ func (b BitMap) String() string {
 		if v == 0 {
 			continue
 		}
-		for j := uint(0); j < 8; j++ {
+		for j := 0; j < byteSize; j++ {
 			if v&(1<<j) != 0 {
-				fmt.Fprintf(&buf, "%d ", 8*uint(i)+j)
+				fmt.Fprintf(&buf, "%d ", byteSize*i+j)
 			}
 		}
 	}

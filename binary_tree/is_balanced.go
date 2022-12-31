@@ -19,7 +19,7 @@ func processIsBalanced1(head *Node, ans []bool) int {
 	if math.Abs(float64(leftHeight-rightHeight)) > 1 {
 		ans[0] = false
 	}
-	return int(math.Max(float64(leftHeight), float64(rightHeight)) + 1)
+	return getMax(leftHeight, rightHeight) + 1
 }
 
 func IsBalanced2(head *Node) bool {
@@ -33,17 +33,10 @@ func processIsBalanced2(head *Node) IsBalancedInfo {
 	leftInfo := processIsBalanced2(head.left)
 	rightInfo := processIsBalanced2(head.right)
 
-	height := int(math.Max(float64(leftInfo.height), float64(rightInfo.height))) + 1
-	isBalanced := true
-	if !leftInfo.isBalanced {
-		isBalanced = false
-	}
-	if !rightInfo.isBalanced {
-		isBalanced = false
-	}
-	if math.Abs(float64(leftInfo.height-rightInfo.height)) > 1 {
-		isBalanced = false
-	}
+	isBalanced := leftInfo.isBalanced && rightInfo.isBalanced &&
+		math.Abs(float64(leftInfo.height-rightInfo.height)) <= 1
+	height := getMax(leftInfo.height, rightInfo.height) + 1
+
 	return NewIsBalancedInfo(isBalanced, height)
 }
 

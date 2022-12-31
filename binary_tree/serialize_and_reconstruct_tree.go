@@ -76,13 +76,11 @@ func BuildByPreQueue(preList *list.List) *Node {
 }
 
 func preb(preList *list.List) *Node {
-	value, ok := preList.Front().Value.(string)
+	head := generateNode(preList.Front().Value)
 	preList.Remove(preList.Front())
-	if !ok {
+	if head == nil {
 		return nil
 	}
-	v, _ := strconv.Atoi(value)
-	head := NewNode(v)
 	head.left = preb(preList)
 	head.right = preb(preList)
 	return head
@@ -92,25 +90,18 @@ func BuildByPostQueue(postList *list.List) *Node {
 	if postList == nil || postList.Len() == 0 {
 		return nil
 	}
-	// 左右中 -> stack (中右左)
-	stack := list.New()
-	for postList.Len() != 0 {
-		stack.PushBack(postList.Front().Value)
-		postList.Remove(postList.Front())
-	}
-	return postb(stack)
+	return postb(postList)
 }
 
-func postb(postStack *list.List) *Node {
-	value, ok := postStack.Back().Value.(string)
-	postStack.Remove(postStack.Back())
-	if !ok {
+func postb(postList *list.List) *Node {
+	// 把 postList 當成堆疊從後面取資料: 左右中 -> stack (中右左)
+	head := generateNode(postList.Back().Value)
+	postList.Remove(postList.Back())
+	if head == nil {
 		return nil
 	}
-	v, _ := strconv.Atoi(value)
-	head := NewNode(v)
-	head.right = postb(postStack)
-	head.left = postb(postStack)
+	head.right = postb(postList)
+	head.left = postb(postList)
 	return head
 }
 
@@ -120,17 +111,20 @@ func LevelSerial(head *Node) *list.List {
 		ans.PushBack(nil)
 	} else {
 		ans.PushBack(strconv.Itoa(head.value))
+
 		queue := list.New()
 		queue.PushBack(head)
 		for queue.Len() != 0 {
 			head := queue.Front().Value.(*Node)
 			queue.Remove(queue.Front())
+
 			if head.left != nil {
 				ans.PushBack(strconv.Itoa(head.left.value))
 				queue.PushBack(head.left)
 			} else {
 				ans.PushBack(nil)
 			}
+
 			if head.right != nil {
 				ans.PushBack(strconv.Itoa(head.right.value))
 				queue.PushBack(head.right)
@@ -153,6 +147,7 @@ func BuildByLevelQueue(levelList *list.List) *Node {
 	if head != nil {
 		queue.PushBack(head)
 	}
+
 	var node *Node
 	for queue.Len() != 0 {
 		node = queue.Front().Value.(*Node)
@@ -160,8 +155,10 @@ func BuildByLevelQueue(levelList *list.List) *Node {
 
 		node.left = generateNode(levelList.Front().Value)
 		levelList.Remove(levelList.Front())
+
 		node.right = generateNode(levelList.Front().Value)
 		levelList.Remove(levelList.Front())
+
 		if node.left != nil {
 			queue.PushBack(node.left)
 		}
