@@ -115,7 +115,7 @@ func LevelSerial(head *Node) *list.List {
 		queue := list.New()
 		queue.PushBack(head)
 		for queue.Len() != 0 {
-			head := queue.Front().Value.(*Node)
+			head = queue.Front().Value.(*Node)
 			queue.Remove(queue.Front())
 
 			if head.left != nil {

@@ -17,10 +17,10 @@ func SortedTopology(graph Graph) []*Node {
 
 	var result []*Node
 	for zeroInQueue.Len() != 0 {
-		cur := zeroInQueue.Front().Value.(*Node)
+		curNode := zeroInQueue.Front().Value.(*Node)
 		zeroInQueue.Remove(zeroInQueue.Front())
-		result = append(result, cur)
-		for _, next := range cur.nexts {
+		result = append(result, curNode)
+		for _, next := range curNode.nexts {
 			inMap[next] = inMap[next] - 1
 			if inMap[next] == 0 {
 				zeroInQueue.PushBack(next)

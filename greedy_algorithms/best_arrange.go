@@ -45,7 +45,7 @@ func processBestArrange(programs Programs, done, timeLine int) int {
 	if len(programs) == 0 {
 		return done
 	}
-	// 還剩下會議
+	// 還剩下會議，才會執行以下程式碼
 	max := done
 	// 目前安排的會議是什麼會，每一個都列舉
 	for i, program := range programs {

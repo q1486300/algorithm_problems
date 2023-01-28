@@ -76,17 +76,17 @@ func unrecursivePostOrder2(head *Node) {
 	}
 	stack := list.New()
 	stack.PushBack(head)
-	var c *Node
+	var cur *Node
 	for stack.Len() != 0 {
-		c = stack.Back().Value.(*Node)
-		if c.left != nil && c.left != head && c.right != head {
-			stack.PushBack(c.left)
-		} else if c.right != nil && c.right != head {
-			stack.PushBack(c.right)
+		cur = stack.Back().Value.(*Node)
+		if cur.left != nil && cur.left != head && cur.right != head {
+			stack.PushBack(cur.left)
+		} else if cur.right != nil && cur.right != head {
+			stack.PushBack(cur.right)
 		} else {
-			fmt.Printf("%d ", c.value)
+			fmt.Printf("%d ", cur.value)
 			stack.Remove(stack.Back())
-			head = c
+			head = cur
 		}
 	}
 	fmt.Println()

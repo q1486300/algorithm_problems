@@ -1,6 +1,8 @@
 package binary_tree
 
-import "math"
+import (
+	"math"
+)
 
 func IsBalanced1(head *Node) bool {
 	ans := make([]bool, 1)
@@ -11,7 +13,7 @@ func IsBalanced1(head *Node) bool {
 
 func processIsBalanced1(head *Node, ans []bool) int {
 	if !ans[0] || head == nil {
-		return -1
+		return 0
 	}
 	leftHeight := processIsBalanced1(head.left, ans)
 	rightHeight := processIsBalanced1(head.right, ans)

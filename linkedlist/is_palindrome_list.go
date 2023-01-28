@@ -27,7 +27,7 @@ func IsPalindrome2(head *Node) bool {
 	}
 
 	right := head.next
-	cur := head
+	cur := head.next
 	for cur.next != nil && cur.next.next != nil {
 		right = right.next
 		cur = cur.next.next
@@ -61,6 +61,7 @@ func IsPalindrome3(head *Node) bool {
 	}
 	// n1 中點
 
+	// n1: pre，n2: cur，n3: next
 	n2 = n1.next // n2 -> right part first node
 	n1.next = nil
 	var n3 *Node
@@ -83,6 +84,7 @@ func IsPalindrome3(head *Node) bool {
 		n2 = n2.next // left to mid
 	}
 
+	// n3: pre，n1: cur，n2: next
 	n1 = n3.next
 	n3.next = nil
 	for n1 != nil { // recover list

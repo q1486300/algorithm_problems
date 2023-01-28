@@ -2,7 +2,9 @@ package binary_tree
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func TestIsBalanced(t *testing.T) {
@@ -20,4 +22,7 @@ func TestIsBalanced(t *testing.T) {
 			break
 		}
 	}
+}
+func init() {
+	rand.Seed(time.Now().UnixNano())
 }

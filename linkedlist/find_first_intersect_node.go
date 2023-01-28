@@ -42,9 +42,6 @@ func getLoopNode(head *Node) *Node {
 
 // 如果兩個鏈結串列都無環，返回第一個相交節點，如果不相交返回nil
 func noLoop(head1, head2 *Node) *Node {
-	if head1 == nil || head2 == nil {
-		return nil
-	}
 	cur1 := head1
 	cur2 := head2
 	n := 0

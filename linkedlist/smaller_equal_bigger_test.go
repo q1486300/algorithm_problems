@@ -16,7 +16,13 @@ func TestListPartition(t *testing.T) {
 		head := generateRandomLinkedList(length, value)
 		// partitionValue: 0 ~ 50
 		partitionValue := rand.Intn(value + 1)
-		//head = ListPartition1(head, partitionValue)
+		head = ListPartition1(head, partitionValue)
+		if !assert.True(t, checkPartition(head, partitionValue)) {
+			break
+		}
+
+		head = generateRandomLinkedList(length, value)
+		partitionValue = rand.Intn(value + 1)
 		head = ListPartition2(head, partitionValue)
 		if !assert.True(t, checkPartition(head, partitionValue)) {
 			break

@@ -8,7 +8,7 @@ func Number(str string) int {
 	}
 	intStr := make([]int, len(str))
 	for i, cur := range str {
-		intStr[i] = int(cur - 48)
+		intStr[i] = int(cur - 48) // '0' 的 ASCII碼 為 48
 	}
 	return processNumber(intStr, 0)
 }

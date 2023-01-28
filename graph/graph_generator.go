@@ -12,22 +12,26 @@ func createGraph(matrix [][]int) Graph {
 		weight := matrix[i][0]
 		from := matrix[i][1]
 		to := matrix[i][2]
-		_, ok := graph.nodes[from]
+
+		fromNode, ok := graph.nodes[from]
 		if !ok {
 			graph.nodes[from] = NewNode(from)
+			fromNode = graph.nodes[from]
 		}
-		_, ok = graph.nodes[to]
+
+		toNode, ok := graph.nodes[to]
 		if !ok {
 			graph.nodes[to] = NewNode(to)
+			toNode = graph.nodes[to]
 		}
-		fromNode := graph.nodes[from]
-		toNode := graph.nodes[to]
+
 		newEdge := NewEdge(weight, fromNode, toNode)
+		graph.edges[newEdge] = true
+
 		fromNode.nexts = append(fromNode.nexts, toNode)
+		fromNode.edges = append(fromNode.edges, newEdge)
 		fromNode.out++
 		toNode.in++
-		fromNode.edges = append(fromNode.edges, newEdge)
-		graph.edges[newEdge] = true
 	}
 	return graph
 }

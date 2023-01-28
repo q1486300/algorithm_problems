@@ -6,6 +6,7 @@ import (
 )
 
 func Dijkstra1(from *Node) map[*Node]int {
+	// 從 from 節點到 Key 節點的最短距離是 Value
 	distanceMap := make(map[*Node]int)
 	distanceMap[from] = 0
 	// 已經選過(處理過)的節點
@@ -29,11 +30,11 @@ func Dijkstra1(from *Node) map[*Node]int {
 	return distanceMap
 }
 
-func getMinDistanceAndUnselectedNode(distanceMap map[*Node]int, touchedNodes map[*Node]struct{}) *Node {
+func getMinDistanceAndUnselectedNode(distanceMap map[*Node]int, selectedNodes map[*Node]struct{}) *Node {
 	var minNode *Node
 	minDistance := math.MaxInt
 	for node, distance := range distanceMap {
-		_, ok := touchedNodes[node]
+		_, ok := selectedNodes[node]
 		if !ok && distance < minDistance {
 			minNode = node
 			minDistance = distance
@@ -49,12 +50,12 @@ func Dijkstra2(head *Node) map[*Node]int {
 	result := make(map[*Node]int)
 	for nodeDistanceHeap.Len() != 0 {
 		nodeDistance := heap.Pop(nodeDistanceHeap).(NodeDistance)
-		cur := nodeDistance.node
+		curNode := nodeDistance.node
 		distance := nodeDistance.distance
-		for _, edge := range cur.edges {
+		for _, edge := range curNode.edges {
 			heap.Push(nodeDistanceHeap, NewNodeDistance(edge.to, distance+edge.weight))
 		}
-		result[cur] = distance
+		result[curNode] = distance
 	}
 	return result
 }

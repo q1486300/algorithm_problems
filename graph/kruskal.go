@@ -73,20 +73,21 @@ func (u UnionFind) Sets() int {
 	return len(u.sizeMap)
 }
 
-func KruskalMST(graph Graph) map[*Edge]struct{} {
+func KruskalMST(graph Graph) []*Edge {
 	unionFind := NewUnionFind()
 	unionFind.MakeSets(graph.GetAllNodes())
-	// 從小的邊到大的邊，一次彈出，最小堆積樹
-	priorityQueue := NewEdgePriorityQueue()
+	// 從小的邊到大的邊，一次彈出，優先級隊列 (最小堆積樹)
+	edgePQ := NewEdgePriorityQueue()
 	for edge := range graph.edges { // M 條邊
-		heap.Push(priorityQueue, edge) // O(logM)
+		heap.Push(edgePQ, edge) // O(logM)
 	}
-	result := make(map[*Edge]struct{})
-	for priorityQueue.Len() != 0 { // M 條邊
-		edge := heap.Pop(priorityQueue).(*Edge)
-		if !unionFind.IsSameSet(edge.from, edge.to) { // O(1)
-			result[edge] = struct{}{}
-			unionFind.Union(edge.from, edge.to)
+
+	var result []*Edge
+	for edgePQ.Len() != 0 { // M 條邊
+		curEdge := heap.Pop(edgePQ).(*Edge)
+		if !unionFind.IsSameSet(curEdge.from, curEdge.to) { // O(1)
+			result = append(result, curEdge)
+			unionFind.Union(curEdge.from, curEdge.to)
 		}
 	}
 	return result

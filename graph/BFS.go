@@ -5,15 +5,15 @@ import (
 	"fmt"
 )
 
-// 從 node 出發，進行廣度優先搜尋
+// 從 start 出發，進行廣度優先搜尋
 func BFS(start *Node) {
 	if start == nil {
 		return
 	}
 	queue := list.New()
-	set := make(map[*Node]bool)
+	set := make(map[*Node]struct{})
 	queue.PushBack(start)
-	set[start] = true
+	set[start] = struct{}{}
 	for queue.Len() != 0 {
 		cur := queue.Front().Value.(*Node)
 		queue.Remove(queue.Front())
@@ -21,7 +21,7 @@ func BFS(start *Node) {
 		for _, next := range cur.nexts {
 			_, ok := set[next]
 			if !ok {
-				set[next] = true
+				set[next] = struct{}{}
 				queue.PushBack(next)
 			}
 		}
