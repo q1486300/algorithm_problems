@@ -10,11 +10,11 @@ type BitMap []byte
 const byteSize = 8
 
 func NewBitMap(maxNum uint) BitMap {
-	return make([]byte, (maxNum/byteSize)+1)
+	return make(BitMap, (maxNum/byteSize)+1)
 }
 
 func (b BitMap) Set(n uint) {
-	if n/byteSize > uint(len(b)) {
+	if n/byteSize >= uint(len(b)) {
 		fmt.Println("大小超出 bitmap 範圍")
 		return
 	}
@@ -25,7 +25,7 @@ func (b BitMap) Set(n uint) {
 }
 
 func (b BitMap) Del(n uint) {
-	if n/byteSize > uint(len(b)) {
+	if n/byteSize >= uint(len(b)) {
 		fmt.Println("大小超出 bitmap 範圍")
 		return
 	}
@@ -36,7 +36,7 @@ func (b BitMap) Del(n uint) {
 }
 
 func (b BitMap) IsExist(n uint) bool {
-	if n/byteSize > uint(len(b)) {
+	if n/byteSize >= uint(len(b)) {
 		fmt.Println("大小超出 bitmap 範圍")
 		return false
 	}
@@ -59,6 +59,6 @@ func (b BitMap) String() string {
 		}
 	}
 	buf.Truncate(buf.Len() - 1)
-	buf.WriteString("}")
+	buf.WriteString("}\n")
 	return buf.String()
 }
