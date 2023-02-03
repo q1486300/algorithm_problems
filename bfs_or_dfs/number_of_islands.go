@@ -32,14 +32,11 @@ func NumIslands1(board [][]byte) int {
 	row := len(board)
 	col := len(board[0])
 
+	var dotList []*Dot
 	dots := make([][]*Dot, row)
 	for i := range dots {
 		dots[i] = make([]*Dot, col)
-	}
-	var dotList []*Dot
-
-	for i := 0; i < row; i++ {
-		for j := 0; j < col; j++ {
+		for j := range dots[i] {
 			if board[i][j] == 1 {
 				dots[i][j] = NewDot(i, j)
 				dotList = append(dotList, dots[i][j])
