@@ -38,13 +38,13 @@ func getNextArray(str2 []rune) []int {
 	next[0] = -1
 	next[1] = 0
 	i := 2  // 目前在哪個位置上求 next 切片的值
-	cn := 0 // 目前是用哪個位置的值再和 i-1 位置的字元比較
+	cn := 0 // 目前是用哪個位置的值在和 i-1 位置的字元比較
 	for i < len(next) {
 		if str2[i-1] == str2[cn] { // 配成功的時候
 			cn++
 			next[i] = cn
 			i++
-		} else if next[cn] != -1 { // cn == 0
+		} else if next[cn] != -1 { // cn != 0
 			cn = next[cn]
 		} else {
 			next[i] = 0
