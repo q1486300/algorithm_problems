@@ -16,16 +16,15 @@ func processMinCoins1(arr []int, index, rest int) int {
 		} else {
 			return math.MaxInt
 		}
-	} else {
-		ans := math.MaxInt
-		for nums := 0; nums*arr[index] <= rest; nums++ {
-			next := processMinCoins1(arr, index+1, rest-(nums*arr[index]))
-			if next != math.MaxInt {
-				ans = getMin(ans, nums+next)
-			}
-		}
-		return ans
 	}
+	ans := math.MaxInt
+	for nums := 0; nums*arr[index] <= rest; nums++ {
+		next := processMinCoins1(arr, index+1, rest-(nums*arr[index]))
+		if next != math.MaxInt {
+			ans = getMin(ans, nums+next)
+		}
+	}
+	return ans
 }
 
 func MinCoinsDP1(arr []int, aim int) int {
